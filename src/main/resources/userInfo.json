@@ -7,5 +7,6 @@
   "city": "Ames",
   "state": "Iowa",
   "postCose": "11000",
-  "phone": "1234567"
+  "phone": "1234567",
+  "email2": "testmail03@test.test"
 }

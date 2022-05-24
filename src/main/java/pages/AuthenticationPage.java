@@ -61,6 +61,9 @@ public class AuthenticationPage {
     @FindBy(xpath = "//span[.='Register']")
     WebElement registerBtn;
 
+    @FindBy(css = ".alert")
+    WebElement alert;
+
     private static WebDriver driver;
 
     public AuthenticationPage() {
@@ -109,6 +112,10 @@ public class AuthenticationPage {
         fillRequiredFields(user);
         pushData();
         return new MyAccountPage();
+    }
+
+    public boolean isErrorAvailable() {
+        return alert.isDisplayed();
     }
 
 }

@@ -42,6 +42,14 @@ public class CreateAccountTest {
         assertEquals("An account using this email address has already been registered. Please enter a valid password or request a new one.", loginPage.getSignUpErrorMessage());
     }
 
+    @Test
+    public void createAccountWithEmptyData() {
+        User user2 = JsonReader.readJsonData("user2Info");
+        loginPage.fillNewEmailForm(user2.getEmail());
+        authenticationPage.enterAndRegisterData(user2);
+        assertTrue(authenticationPage.isErrorAvailable());
+    }
+
     @AfterAll
     public static void cleanup() {
         WebDriverSingleton.getInstance().quitDriver();
