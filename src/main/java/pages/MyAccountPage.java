@@ -16,7 +16,8 @@ public class MyAccountPage {
     @FindBy(css = ".account > span")
     WebElement userName;
 
-    @FindBy()
+    @FindBy(css = "[title='My wishlists']")
+    WebElement wishlistBtn;
 
     private static WebDriver driver;
 
@@ -30,9 +31,15 @@ public class MyAccountPage {
         return userName.getText();
     }
 
-    public boolean isAccountCreated(User user) {
-        String fullUserName = user.getFirstName() + " " + user.getLastName();
+    public boolean isAccountCreated(String firstName, String lastName) {
+        String fullUserName =firstName + " " + lastName;
         return getAccountUserName().equals(fullUserName);
+    }
+
+    public WishlistPage openWishlists() {
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(wishlistBtn));
+        wishlistBtn.click();
+        return new WishlistPage();
     }
 
 }

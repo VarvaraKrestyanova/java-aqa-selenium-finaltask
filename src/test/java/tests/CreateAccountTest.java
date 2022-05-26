@@ -37,15 +37,15 @@ public class CreateAccountTest {
     @AllureId("AP-1-01")
     @Test
     public void createAccountTest() {
-        loginPage.fillNewEmailForm(user.getEmail());
+        loginPage.createNewAccount(user.getEmail());
         authenticationPage.enterAndRegisterData(user);
-        assertTrue(myAccountPage.isAccountCreated(user), "Account is not created");
+        assertTrue(myAccountPage.isAccountCreated(user.getFirstName(), user.getLastName()), "Account is not created");
     }
 
     @AllureId("AP-1-02")
     @Test
     public void createAccountWithExistingEmail() {
-        loginPage.fillNewEmailForm(existingUserMail);
+        loginPage.createNewAccount(existingUserMail);
         assertEquals("An account using this email address has already been registered. Please enter a valid password or request a new one.", loginPage.getSignUpErrorMessage(),
                 "There is no error message for new account with existing email");
     }
@@ -54,7 +54,7 @@ public class CreateAccountTest {
     @Test
     public void createAccountWithEmptyData() {
         User user2 = JsonReader.readJsonData("user2Info");
-        loginPage.fillNewEmailForm(user2.getEmail());
+        loginPage.createNewAccount(user2.getEmail());
         authenticationPage.enterAndRegisterData(user2);
         assertTrue(authenticationPage.isErrorAvailable(), "There is no error message for new account with not filled required fields");
     }
