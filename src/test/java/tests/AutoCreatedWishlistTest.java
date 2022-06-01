@@ -2,31 +2,28 @@ package tests;
 
 import com.github.javafaker.Faker;
 import helpers.JsonReader;
-import helpers.PropertiesUtil;
 import helpers.User;
 import helpers.WebDriverSingleton;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import pages.AuthenticationPage;
-import pages.LoginPage;
-import pages.MyAccountPage;
-import pages.WishlistPage;
+import org.junit.jupiter.api.extension.ExtendWith;
+import pages.*;
+import reporting.TestListener;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AutoCreatedWishlistTest {
+@ExtendWith(TestListener.class)
 
-    private static final String EXISTING_EMAIL = "user.mail";
-    private static final String EXISTING_PWD = "user.password";
-    private static String existingUserMail = PropertiesUtil.get(EXISTING_EMAIL);
-    private static String existingUserPassword = PropertiesUtil.get(EXISTING_PWD);
+public class AutoCreatedWishlistTest {
 
     private static LoginPage loginPage;
     private static MyAccountPage myAccountPage;
     private static AuthenticationPage authenticationPage;
     private static WishlistPage wishlistPage;
+    private static CatalogPage tShirtsPage;
     private static User user;
     private static Faker faker;
 
@@ -34,23 +31,37 @@ public class AutoCreatedWishlistTest {
     public static void setup() {
         loginPage = new LoginPage();
         user = JsonReader.readJsonData("userInfo");
+        user.setEmail(faker.funnyName() + "@test.test");
     }
 
-    @AllureId("AP-1-03")
+    @AllureId("AP-3-01")
     @Test
-    public void addToAutoCreatedWishlistTest() {
-        authenticationPage = loginPage.createNewAccount(faker.funnyName() + "@test.test");
-        authenticationPage.enterAndRegisterData(user);
+    @Order(1)
+    public void lackOfWishlistsForNewUserTest() {
+        System.out.println(user.getEmail());
+        authenticationPage = loginPage.createNewAccount(user.getEmail());
+        myAccountPage = authenticationPage.enterAndRegisterData(user);
         wishlistPage = myAccountPage.openWishlists();
         assertFalse(wishlistPage.isWishlistExist(), "New user has wishlists");
+    }
 
-
+    @AllureId("AP-3-02")
+    @Test
+    @Order(2)
+    public void addToAutoCreatedWishlistTest2() {
+        System.out.println(user.getEmail());
+        loginPage.logIn(user.getEmail(), user.getPassword());
+        tShirtsPage = myAccountPage.openCatalogPage("T-Shirts");
+        tShirtsPage.addProductToWishlist();
+        myAccountPage.clickOnUsername();
+        myAccountPage.openWishlists();
+        assertTrue(wishlistPage.isWishlistExist(), "Wishlist is not auto-created");
     }
 
     @AfterAll
     public static void cleanup() {
-        WebDriverSingleton.getInstance().quitDriver();
         wishlistPage.deleteWishlist();
+        WebDriverSingleton.getInstance().quitDriver();
     }
 
 }

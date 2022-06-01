@@ -1,5 +1,6 @@
 package helpers;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -26,8 +27,12 @@ public class WebDriverSingleton {
     public WebDriver getDriver() {
         if (driver == null) {
             switch (browserName) {
-                case "chrome": driver = new ChromeDriver();
-                case "ff": driver = new FirefoxDriver();
+                case "chrome":
+                    WebDriverManager.chromedriver().setup();
+                    driver = new ChromeDriver(); break;
+                case "ff":
+                    WebDriverManager.firefoxdriver().setup();
+                    driver = new FirefoxDriver(); break;
             }
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         }

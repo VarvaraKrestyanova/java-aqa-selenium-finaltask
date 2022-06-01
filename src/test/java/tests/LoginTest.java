@@ -8,12 +8,16 @@ import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import pages.AuthenticationPage;
 import pages.LoginPage;
 import pages.MyAccountPage;
+import reporting.TestListener;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(TestListener.class)
 
 public class LoginTest {
 
@@ -33,7 +37,7 @@ public class LoginTest {
         user = JsonReader.readJsonData("userInfo");
     }
 
-    @AllureId("AP-1-02")
+    @AllureId("AP-2-01")
     @Test
     public void LogInTest() {
         loginPage.logIn(existingUserMail, existingUserPassword);
